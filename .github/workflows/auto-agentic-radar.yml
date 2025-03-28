@@ -1,25 +1,22 @@
 name: Automatic Agentic Radar
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
 
 jobs:
-  analyze:
+  run-agentic-radar:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Get list of committed files
+      - name: Get list of committed files in the PR
         id: changed_files
         run: |
           mkdir -p analysis_folder
           git fetch --unshallow
-          git diff --name-only ${{ github.event.before }} ${{ github.sha }} > changed_files.txt
+          git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }} > changed_files.txt
           while IFS= read -r file; do
             cp --parents "$file" analysis_folder/ 2>/dev/null || true
           done < changed_files.txt
