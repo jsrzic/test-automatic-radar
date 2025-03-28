@@ -49,14 +49,25 @@ jobs:
           pip install agentic-radar[crewai]
       
       - name: Run Agentic Radar
+        id: agentic_radar
         if: ${{ env.FRAMEWORK != 'unknown' }}
         run: |
           agentic-radar -i analysis_folder -o report.html $FRAMEWORK
         continue-on-error: true
         
       - name: Upload report.html
+        id: upload_artifact
         if: ${{ env.FRAMEWORK != 'unknown' && steps.agentic_radar.outcome == 'success' }}
         uses: actions/upload-artifact@v4
         with:
           name: agentic-radar-report
           path: report.html
+
+      - name: Comment on PR with download link
+        if: ${{ env.FRAMEWORK != 'unknown' && steps.agentic_radar.outcome == 'success' }}
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            The Agentic Radar report has been generated. You can download the report using the link below:
+            - [Download Agentic Radar Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/${{ steps.upload_artifact.outputs.artifact-id }})
