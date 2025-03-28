@@ -55,7 +55,8 @@ jobs:
         if: ${{ env.FRAMEWORK != 'unknown' }}
         run: |
           agentic-radar -i analysis_folder -o report.html $FRAMEWORK
-
+        continue-on-error: true
+        
       - name: Upload report.html
         if: ${{ env.FRAMEWORK != 'unknown' && steps.agentic_radar.outcome == 'success' }}
         uses: actions/upload-artifact@v4
