@@ -17,7 +17,6 @@ jobs:
         id: changed_files
         run: |
           mkdir -p analysis_folder
-          git fetch --unshallow
           git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }} > changed_files.txt
           while IFS= read -r file; do
             cp --parents "$file" analysis_folder/ 2>/dev/null || true
