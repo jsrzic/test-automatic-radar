@@ -10,6 +10,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Ensures full commit history is available
 
       - name: Get list of committed files in the PR
         id: changed_files
@@ -24,7 +26,7 @@ jobs:
       - name: Extract framework from commit message
         id: detect_framework
         run: |
-          COMMIT_MSG=$(git log -1 --pretty=%B)
+          COMMIT_MSG=$(git log --format=%B -n 1 ${{ github.event.pull_request.head.sha }})
           FRAMEWORK="unknown"
           for word in "crewai" "langgraph" "n8n" "openai-agents"; do
             if echo "$COMMIT_MSG" | grep -iq "$word"; then
