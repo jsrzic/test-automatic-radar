@@ -24,7 +24,7 @@ jobs:
       - name: Extract framework from commit message
         id: detect_framework
         run: |
-          COMMIT_MSG="${{ github.event.head_commit.message }}"
+          COMMIT_MSG=$(git log -1 --pretty=%B)
           FRAMEWORK="unknown"
           for word in "crewai" "langgraph" "n8n" "openai-agents"; do
             if echo "$COMMIT_MSG" | grep -iq "$word"; then
