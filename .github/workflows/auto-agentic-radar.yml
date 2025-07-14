@@ -51,7 +51,7 @@ jobs:
         id: agentic_radar
         if: ${{ env.FRAMEWORK != 'unknown' }}
         run: |
-          agentic-radar scan $FRAMEWORK -i analysis_folder -o report.html
+          agentic-radar scan $FRAMEWORK -o report.html
         continue-on-error: true
         
       - name: Upload report.html
