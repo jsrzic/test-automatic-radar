@@ -31,19 +31,19 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Cache pip dependencies
+      - name: Cache venv
         if: ${{ env.FRAMEWORK != 'unknown' }}
+        id: cache-venv
         uses: actions/cache@v4
         with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-agentic-radar-v1
-          restore-keys: |
-            ${{ runner.os }}-pip-agentic-radar-
-            ${{ runner.os }}-pip-
+          path: .venv
+          key: ${{ runner.os }}-venv-agentic-radar-v1
 
       - name: Install Agentic Radar
-        if: ${{ env.FRAMEWORK != 'unknown' }}
+        if: ${{ env.FRAMEWORK != 'unknown' && steps.cache-venv.outputs.cache-hit != 'true' }}
         run: |
+          python -m venv .venv
+          source .venv/bin/activate
           python -m pip install --upgrade pip
           pip install agentic-radar[crewai,openai-agents]
       
@@ -51,6 +51,7 @@ jobs:
         id: agentic_radar
         if: ${{ env.FRAMEWORK != 'unknown' }}
         run: |
+          source .venv/bin/activate
           agentic-radar scan $FRAMEWORK -o report.html
         continue-on-error: true
         
