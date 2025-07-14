@@ -27,7 +27,7 @@ jobs:
         run: |
           COMMIT_MSG=$(git log --format=%B -n 1 ${{ github.event.pull_request.head.sha }})
           FRAMEWORK="unknown"
-          for word in "crewai" "langgraph" "n8n" "openai-agents"; do
+          for word in "crewai" "langgraph" "n8n" "openai-agents" "autogen"; do
             if echo "$COMMIT_MSG" | grep -iq "$word"; then
               FRAMEWORK="$word"
               break
